@@ -39,18 +39,19 @@ Du arbeitest mit **230 V Netzspannung** und einem **~1100 W Heizelement**. Fehle
 
 ## 💻 Schritt 2 – Firmware vorbereiten und ESP8266 flashen
 
-Da Version 4.0 den ESP8266 nicht mehr unterstützt, musst du eine Version aus der **3.x.x Serie** (z. B. v3.1.2) installieren.
+Da Version 4.0 den ESP8266 nicht mehr unterstützt, musst du eine Version aus der **3.x.x Serie** (in deinem Fall **v3.3.0**) installieren.
 
 1. **Software installieren**: Lade dir Visual Studio Code (VSCode) und die Erweiterung **PlatformIO** herunter.
 2. **Quellcode laden**: Lade dir den Quellcode einer v3-Version als ZIP von der GitHub-Seite herunter und entpacke ihn.
 3. Öffne den entpackten Ordner in VSCode (PlatformIO erkennt das Projekt automatisch).
-4. **Konfigurationsdatei prüfen**: Kopiere die `userConfig_sample.h` zu `userConfig.h`. Setze dort u. a.:
-   - **Boardtyp**: ESP8266 (bzw. für PCB Rev 1.2)
-   - **Temperatursensor**: `TSIC`
-   - **Display**: OLED SSD1306 / 0,96″
+4. **Konfigurationsdatei anpassen**: Kopiere die `userConfig_sample.h` zu `userConfig.h`. Setze dort die für dich passenden Werte:
+   - **WLAN-Zugangsdaten (Wichtig für v3.3.0!):** Trage bei `WIFI_SSID` und `WIFI_PASS` die Daten für dein Heimnetzwerk ein. Der WiFi-Manager wurde in dieser Version entfernt, eine Konfiguration per Weboberfläche ist beim ersten Start nicht mehr möglich.
+   - **Temperatursensor**: Setze `TEMPSENSOR` auf `2` für den TSIC.
+   - **Display**: Setze `OLED_DISPLAY` auf `2` für das SSD1306 0,96" Display.
+   - Prüfe auch die weiteren Einstellungen wie `MACHINEID` und passe sie bei Bedarf an.
 5. **ESP flashen**: Verbinde den AZ-Delivery NodeMCU per Micro-USB mit dem PC und klicke in PlatformIO auf "Upload".
 
-> *Tipp: Teste den NodeMCU + Platine + OLED kurz am USB-Kabel (vor dem Einbau in die Maschine). Wenn das OLED etwas anzeigt und der ESP ein WLAN aufspannt, war das Flashen erfolgreich.*
+> *Tipp: Teste den NodeMCU + Platine + OLED kurz am USB-Kabel (vor dem Einbau in die Maschine). Wenn das OLED etwas anzeigt, war das Flashen erfolgreich. Der ESP wird versuchen, sich direkt mit dem von dir konfigurierten WLAN zu verbinden.*
 
 **Referenzen:**
 - CleverCoffee GitHub Releases (für v3.x.x)
@@ -119,8 +120,8 @@ Der Sensor benötigt drei Verbindungen: GND, VCC (3,3V) und Signal.
 2. Platziere das OLED-Display so, dass es von außen gut ablesbar ist.
 3. **Erster Start (mit Wasser, Boiler voll!):** Stecker rein, Hauptschalter umlegen.
    - Das OLED sollte aufleuchten und die aktuelle Kesseltemperatur anzeigen.
-   - Der ESP spannt einen WLAN Access Point auf. Verbinde dich mit dem Handy, gehe ins Web-Interface und trage dein Heim-WLAN ein.
-4. **Heiz-Test & PID Tuning:** Stelle im Web-Interface einen Soll-Wert (z. B. 95°C) ein. Heizt das SSR? Steigt die Temperatur? Schaltet die Heizung am Soll-Wert ab? Falls die Temperatur über das Ziel hinausschießt, musst du die PID-Werte im Web-Interface anpassen (siehe Community-Empfehlungen für die Silvia).
+   - Der ESP verbindet sich direkt mit dem in `userConfig.h` eingetragenen WLAN. Du musst die IP-Adresse des Geräts (z.B. über die Weboberfläche deines Routers) herausfinden, um auf das Web-Interface zuzugreifen.
+4. **Heiz-Test & PID Tuning:** Öffne das Web-Interface über die IP-Adresse der Maschine und stelle einen Soll-Wert (z. B. 95°C) ein. Beobachte, ob das SSR heizt und die Temperatur wie erwartet ansteigt und sich stabilisiert. Falls die Temperatur über das Ziel hinausschießt, musst du die PID-Werte im Web-Interface anpassen (siehe Community-Empfehlungen für die Silvia).
 
 **Referenzen:**
 - Anleitung: PID-Werte einstellen (CleverCoffee Handbuch) [19]
